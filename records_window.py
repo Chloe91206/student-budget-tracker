@@ -2,6 +2,7 @@
 Let the user view, add, edit and delete income and expense records.
 Records are saved in data/records.json."""
 
+import json
 import tkinter as tk
 from tkinter import ttk
 
@@ -15,6 +16,7 @@ class RecordsWindow(tk.Toplevel):
         self.geometry("750x450")
         self.title("Records")
         self.create_widgets()
+        self.refresh_table()
 
     def create_widgets(self):
         """Create the widgets in this window."""
@@ -32,13 +34,28 @@ class RecordsWindow(tk.Toplevel):
         self.tree.column("category", width=160)
         self.tree.column("nature", width=140)
 
+        # Hide the default tree column
         self.tree.column("#0", stretch=tk.NO, minwidth=0, width=0)
 
         self.tree.pack(expand=True, fill="both")
+
+    def load_records(self):
+            """Load records from json file."""
+            with open("data/records.json") as file:
+                records = json.load(file)
+            return records
+    
+    def refresh_table(self):
+        """Clear the table and show all records."""
+        # Remove old rows before adding new ones
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        for record in self.load_records():
+            self.tree.insert("", "end", iid=record["id"], values=(record["date"], record["type"], record["amount"], record["category"], record["nature"]))
 
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = RecordsWindow(root)
     root.mainloop()
-
