@@ -111,7 +111,19 @@ class RecordForm(tk.Toplevel):
                                        text="Expense", variable=self.type_var, value="expense")
         expense_radio.pack(side="left")
 
- 
+        # Category: choose from a list
+        self.category_var = tk.StringVar()
+
+        category_label = tk.Label(self, text="Category")
+        category_label.grid(row=3, column=0, padx=10, pady=5, sticky="w")
+
+        categories = ["Food", "Shopping", "Transportation",
+                      "Entertainment", "Education", "Other"]
+        category_box = ttk.Combobox(self, textvariable=self.category_var,
+                                    values=categories, state="readonly")
+        category_box.grid(row=3, column=1, padx=10, pady=5, sticky="w")
+
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = RecordsWindow(root)
