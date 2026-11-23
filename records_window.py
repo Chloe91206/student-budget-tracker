@@ -75,7 +75,7 @@ class RecordForm(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.geometry("420x300")
+        self.geometry("500x350")
         self.title("Add Record")
         self.create_widgets()
 
@@ -122,6 +122,29 @@ class RecordForm(tk.Toplevel):
         category_box = ttk.Combobox(self, textvariable=self.category_var,
                                     values=categories, state="readonly")
         category_box.grid(row=3, column=1, padx=10, pady=5, sticky="w")
+
+        # Nature: necessary, unplanned or impulse
+        self.nature_var = tk.StringVar()
+        self.nature_var.set("Necessary")
+
+        nature_label = tk.Label(self, text="Nature")
+        nature_label.grid(row=4, column=0, padx=10, pady=5, sticky="w")
+
+        nature_frame = tk.Frame(self)
+        nature_frame.grid(row=4, column=1, padx=10, pady=5, sticky="w")
+
+        necessary_radio = tk.Radiobutton(nature_frame, text="Necessary",
+                                         variable=self.nature_var,
+                                         value="Necessary")
+        necessary_radio.pack(side="left")
+        unplanned_radio = tk.Radiobutton(nature_frame, text="Unplanned",
+                                         variable=self.nature_var,
+                                         value="Unplanned")
+        unplanned_radio.pack(side="left")
+        impulse_radio = tk.Radiobutton(nature_frame, text="Impulse",
+                                       variable=self.nature_var,
+                                       value="Impulse")
+        impulse_radio.pack(side="left")
 
 
 if __name__ == "__main__":
