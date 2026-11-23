@@ -59,8 +59,11 @@ class RecordsWindow(tk.Toplevel):
             self.tree.delete(item)
 
         for record in self.load_records():
-            self.tree.insert("", "end", iid=record["id"], values=(record["date"], record["type"], record["amount"], record["category"], record["nature"]))
-   
+            self.tree.insert("", "end", iid=record["id"],
+                             values=(record["date"], record["type"],
+                                     record["amount"], record["category"],
+                                     record["nature"]))
+                                                                  
     def open_add_form(self):
         """Open the form for adding a new record."""
         RecordForm(self)
@@ -72,7 +75,7 @@ class RecordForm(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.geometry("350x300")
+        self.geometry("420x300")
         self.title("Add Record")
         self.create_widgets()
 
@@ -91,7 +94,24 @@ class RecordForm(tk.Toplevel):
         amount_entry = tk.Entry(self, width=20, textvariable=self.amount_var)
         amount_entry.grid(row=1, column=1, padx=10, pady=5)
 
+        # Type: income or expense
+        self.type_var = tk.StringVar()
+        self.type_var.set("expense")
 
+        type_label = tk.Label(self, text="Type")
+        type_label.grid(row=2, column=0, padx=10, pady=5, sticky="w")
+
+        type_frame = tk.Frame(self)
+        type_frame.grid(row=2, column=1, padx=10, pady=5, sticky="w")
+
+        income_radio = tk.Radiobutton(type_frame, text="Income",
+                                      variable=self.type_var, value="income")
+        income_radio.pack(side="left")
+        expense_radio = tk.Radiobutton(type_frame,
+                                       text="Expense", variable=self.type_var, value="expense")
+        expense_radio.pack(side="left")
+
+ 
 if __name__ == "__main__":
     root = tk.Tk()
     app = RecordsWindow(root)
