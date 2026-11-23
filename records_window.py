@@ -74,6 +74,22 @@ class RecordForm(tk.Toplevel):
 
         self.geometry("350x300")
         self.title("Add Record")
+        self.create_widgets()
+
+    def create_widgets(self):
+        """Create the input fields in the form."""
+        self.date_var = tk.StringVar()
+        self.amount_var = tk.StringVar()
+
+        date_label = tk.Label(self, text="Date (YYYY-MM-DD)")
+        date_label.grid(row=0, column=0, padx=10, pady=5, sticky="w")
+        date_entry = tk.Entry(self, width=20, textvariable=self.date_var)
+        date_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        amount_label = tk.Label(self, text="Amount")
+        amount_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+        amount_entry = tk.Entry(self, width=20, textvariable=self.amount_var)
+        amount_entry.grid(row=1, column=1, padx=10, pady=5)
 
 
 if __name__ == "__main__":
