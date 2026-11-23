@@ -9,7 +9,7 @@ from tkinter import ttk
 
 class RecordsWindow(tk.Toplevel):
     """Window that shows all income and expense records in a table."""
-   
+
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -20,6 +20,13 @@ class RecordsWindow(tk.Toplevel):
 
     def create_widgets(self):
         """Create the widgets in this window."""
+        # Button bar above the table
+        button_bar = ttk.Frame(self)
+        button_bar.pack(fill="x", padx=10, pady=5)
+
+        add_button = ttk.Button(button_bar, text="Add", command=self.open_add_form)
+        add_button.pack(side="left")
+
         self.tree = ttk.Treeview(self, columns=("date", "type", "amount", "category", "nature"))
 
         self.tree.heading("date", text="Date")
@@ -40,11 +47,11 @@ class RecordsWindow(tk.Toplevel):
         self.tree.pack(expand=True, fill="both")
 
     def load_records(self):
-            """Load records from json file."""
-            with open("data/records.json") as file:
-                records = json.load(file)
-            return records
-    
+        """Load records from json file."""
+        with open("data/records.json") as file:
+            records = json.load(file)
+        return records
+
     def refresh_table(self):
         """Clear the table and show all records."""
         # Remove old rows before adding new ones
@@ -53,6 +60,10 @@ class RecordsWindow(tk.Toplevel):
 
         for record in self.load_records():
             self.tree.insert("", "end", iid=record["id"], values=(record["date"], record["type"], record["amount"], record["category"], record["nature"]))
+   
+    def open_add_form(self):
+        """Open the form for adding a new record."""
+        print("Add button clicked")
 
 
 if __name__ == "__main__":
