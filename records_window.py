@@ -63,7 +63,17 @@ class RecordsWindow(tk.Toplevel):
    
     def open_add_form(self):
         """Open the form for adding a new record."""
-        print("Add button clicked")
+        RecordForm(self)
+
+
+class RecordForm(tk.Toplevel):
+    """A form window for adding or editing a record."""
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.geometry("350x300")
+        self.title("Add Record")
 
 
 if __name__ == "__main__":
