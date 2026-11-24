@@ -146,6 +146,24 @@ class RecordForm(tk.Toplevel):
                                        value="Impulse")
         impulse_radio.pack(side="left")
 
+        # Save and Cancel buttons
+        button_frame = tk.Frame(self)
+        button_frame.grid(row=5, column=0, columnspan=2, pady=15)
+
+        save_button = tk.Button(button_frame, text="Save",
+                                command=self.save_record)
+        save_button.pack(side="left", padx=10)
+        cancel_button = tk.Button(button_frame, text="Cancel",
+                                  command=self.destroy)
+        cancel_button.pack(side="left", padx=10)
+
+    def save_record(self):
+        """Save the record when Save is clicked."""
+        print(self.date_var.get())
+        print(self.amount_var.get())
+        print(self.type_var.get())
+        print(self.category_var.get())
+        print(self.nature_var.get())
 
 if __name__ == "__main__":
     root = tk.Tk()
