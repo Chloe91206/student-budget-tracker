@@ -76,6 +76,7 @@ class RecordForm(tk.Toplevel):
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.parent = parent
 
         self.geometry("500x350")
         self.title("Add Record")
@@ -189,7 +190,30 @@ class RecordForm(tk.Toplevel):
                                  "Please choose a category.")
             return
 
-        print("All good:", date, amount, category)
+        # Load all records, add the new one, then write them all back
+        records = self.parent.load_records()
+
+        # Give the new record the next id number
+        new_id = 1
+        for record in records:
+            if record["id"] >= new_id:
+                new_id = record["id"] + 1
+
+        new_record = {"id": new_id,
+                      "date": date,
+                      "type": self.type_var.get(),
+                      "amount": amount,
+                      "category": category,
+                      "nature": self.nature_var.get()}
+        records.append(new_record)
+
+        with open("data/records.json", "w") as file:
+            json.dump(records, file)
+
+        # Show the new record in the table and close the form
+        self.parent.refresh_table()
+        self.destroy()
+        
 
 if __name__ == "__main__":
     root = tk.Tk()
