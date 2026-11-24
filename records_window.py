@@ -3,7 +3,9 @@ Let the user view, add, edit and delete income and expense records.
 Records are saved in data/records.json."""
 
 import json
+import re
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import ttk
 
 
@@ -156,14 +158,38 @@ class RecordForm(tk.Toplevel):
         cancel_button = tk.Button(button_frame, text="Cancel",
                                   command=self.destroy)
         cancel_button.pack(side="left", padx=10)
-
+    
     def save_record(self):
         """Save the record when Save is clicked."""
-        print(self.date_var.get())
-        print(self.amount_var.get())
-        print(self.type_var.get())
-        print(self.category_var.get())
-        print(self.nature_var.get())
+        date = self.date_var.get()
+        amount_text = self.amount_var.get()
+        category = self.category_var.get()
+
+        # Check the date format, e.g. 2026-11-24
+        if not re.match(r"^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}$", date):
+            messagebox.showerror("Invalid date",
+                                 "Please enter the date as YYYY-MM-DD.")
+            return
+
+        # Check the amount is a positive number
+        try:
+            amount = float(amount_text)
+        except ValueError:
+            messagebox.showerror("Invalid amount",
+                                 "Please enter a number for the amount.")
+            return
+        if amount <= 0:
+            messagebox.showerror("Invalid amount",
+                                 "The amount must be more than 0.")
+            return
+
+        # Check a category was chosen
+        if category == "":
+            messagebox.showerror("Missing category",
+                                 "Please choose a category.")
+            return
+
+        print("All good:", date, amount, category)
 
 if __name__ == "__main__":
     root = tk.Tk()
