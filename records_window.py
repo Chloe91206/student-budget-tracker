@@ -48,6 +48,9 @@ class RecordsWindow(tk.Toplevel):
 
         self.tree.pack(expand=True, fill="both")
 
+        # Double-click a row to edit it
+        self.tree.bind("<Double-1>", self.open_edit_form)
+
     def load_records(self):
         """Load records from json file."""
         with open("data/records.json") as file:
@@ -65,6 +68,18 @@ class RecordsWindow(tk.Toplevel):
                              values=(record["date"], record["type"],
                                      record["amount"], record["category"],
                                      record["nature"]))
+
+    def open_edit_form(self, event):
+        """Open the form to edit the record that was double-clicked."""
+        selected = self.tree.selection()
+        # Stop if no row was clicked
+        if len(selected) == 0:
+            return
+
+        record_id = int(selected[0])
+        for record in self.load_records():
+            if record["id"] == record_id:
+                RecordForm(self, record)
                                                                   
     def open_add_form(self):
         """Open the form for adding a new record."""
@@ -74,13 +89,25 @@ class RecordsWindow(tk.Toplevel):
 class RecordForm(tk.Toplevel):
     """A form window for adding or editing a record."""
 
-    def __init__(self, parent):
+    def __init__(self, parent, record=None):
         super().__init__(parent)
         self.parent = parent
+        self.record = record
 
         self.geometry("500x350")
-        self.title("Add Record")
+        if self.record is None:
+            self.title("Add Record")
+        else:
+            self.title("Edit Record")
         self.create_widgets()
+
+        # Fill in the form when editing
+        if self.record is not None:
+            self.date_var.set(self.record["date"])
+            self.amount_var.set(self.record["amount"])
+            self.type_var.set(self.record["type"])
+            self.category_var.set(self.record["category"])
+            self.nature_var.set(self.record["nature"])
 
     def create_widgets(self):
         """Create the input fields in the form."""
@@ -192,20 +219,29 @@ class RecordForm(tk.Toplevel):
 
         # Load all records, add the new one, then write them all back
         records = self.parent.load_records()
+        if self.record is None:
+            # Give the new record the next id number
+            new_id = 1
+            for record in records:
+                if record["id"] >= new_id:
+                    new_id = record["id"] + 1
 
-        # Give the new record the next id number
-        new_id = 1
-        for record in records:
-            if record["id"] >= new_id:
-                new_id = record["id"] + 1
-
-        new_record = {"id": new_id,
+            new_record = {"id": new_id,
                       "date": date,
                       "type": self.type_var.get(),
                       "amount": amount,
                       "category": category,
                       "nature": self.nature_var.get()}
-        records.append(new_record)
+            records.append(new_record)
+        else:
+            # Editing: find the record with the same id and change it
+            for record in records:
+                if record["id"] == self.record["id"]:
+                    record["date"] = date
+                    record["type"] = self.type_var.get()
+                    record["amount"] = amount
+                    record["category"] = category
+                    record["nature"] = self.nature_var.get()
 
         with open("data/records.json", "w") as file:
             json.dump(records, file)
