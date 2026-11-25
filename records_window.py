@@ -32,6 +32,18 @@ class RecordsWindow(tk.Toplevel):
                                    command=self.delete_record)
         delete_button.pack(side="left", padx=5)
 
+        # Choose a month, then click Show to filter the table
+        self.month_var = tk.StringVar()
+        self.month_var.set("All")
+        show_button = ttk.Button(button_bar, text="Show",
+                                 command=self.refresh_table)
+        show_button.pack(side="right")
+        self.month_box = ttk.Combobox(button_bar, textvariable=self.month_var,
+                                      state="readonly", width=10)
+        self.month_box.pack(side="right", padx=5)
+        month_label = ttk.Label(button_bar, text="Month:")
+        month_label.pack(side="right")
+
         self.tree = ttk.Treeview(self, columns=("date", "type", "amount", "category", "nature"))
 
         self.tree.heading("date", text="Date")
@@ -61,13 +73,26 @@ class RecordsWindow(tk.Toplevel):
         return records
 
     def refresh_table(self):
-        """Clear the table and show all records."""
+        """Clear the table and show all records for chosen month."""
         # Remove old rows before adding new ones
         for item in self.tree.get_children():
             self.tree.delete(item)
 
-        for record in self.load_records():
-            self.tree.insert("", "end", iid=record["id"],
+        records = self.load_records()
+        month = self.month_var.get()
+
+        # Build the month list
+        months = ["All"]
+        for record in records:
+            record_month = record["date"][0:7]
+            if record_month not in months:
+                months.append(record_month)
+        self.month_box.config(values=months)
+
+        # Only show records from the chosen month
+        for record in records:
+            if month == "All" or record["date"][0:7] == month:
+                self.tree.insert("", "end", iid=record["id"],
                              values=(record["date"], record["type"],
                                      record["amount"], record["category"],
                                      record["nature"]))
