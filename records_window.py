@@ -28,6 +28,9 @@ class RecordsWindow(tk.Toplevel):
 
         add_button = ttk.Button(button_bar, text="Add", command=self.open_add_form)
         add_button.pack(side="left")
+        delete_button = ttk.Button(button_bar, text="Delete",
+                                   command=self.delete_record)
+        delete_button.pack(side="left", padx=5)
 
         self.tree = ttk.Treeview(self, columns=("date", "type", "amount", "category", "nature"))
 
@@ -84,6 +87,33 @@ class RecordsWindow(tk.Toplevel):
     def open_add_form(self):
         """Open the form for adding a new record."""
         RecordForm(self)
+
+    def delete_record(self):
+        """Delete the selected record after asking the user."""
+        selected = self.tree.selection()
+        # Stop if no row is selected
+        if len(selected) == 0:
+            messagebox.showinfo("No record selected",
+                                "Please click a record first.")
+            return
+
+        # Ask before deleting
+        sure = messagebox.askyesno("Delete record",
+                                   "Delete this record?")
+        if not sure:
+            return
+
+        # Keep every record except the one to delete
+        record_id = int(selected[0])
+        new_records = []
+        for record in self.load_records():
+            if record["id"] != record_id:
+                new_records.append(record)
+
+        with open("data/records.json", "w") as file:
+            json.dump(new_records, file)
+
+        self.refresh_table()
 
 
 class RecordForm(tk.Toplevel):
