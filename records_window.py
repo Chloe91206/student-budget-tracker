@@ -27,7 +27,8 @@ class RecordsWindow(tk.Toplevel):
         button_bar = ttk.Frame(self)
         button_bar.pack(fill="x", padx=10, pady=5)
 
-        add_button = ttk.Button(button_bar, text="Add", command=self.open_add_form)
+        add_button = ttk.Button(button_bar, text="Add",
+                                command=self.open_add_form)
         add_button.pack(side="left")
         delete_button = ttk.Button(button_bar, text="Delete",
                                    command=self.delete_record)
@@ -45,7 +46,8 @@ class RecordsWindow(tk.Toplevel):
         month_label = ttk.Label(button_bar, text="Month:")
         month_label.pack(side="right")
 
-        self.tree = ttk.Treeview(self, columns=("date", "type", "amount", "category", "nature"))
+        self.tree = ttk.Treeview(self, columns=("date", "type", "amount",
+                                                "category", "nature"))
 
         self.tree.heading("date", text="Date")
         self.tree.heading("type", text="Type")
@@ -83,8 +85,8 @@ class RecordsWindow(tk.Toplevel):
 
         # Keyboard shortcuts
         self.bind("<Control-n>", lambda e: self.open_add_form())
-        self.bind("<Control-d>", lambda e: self.delete_record()	)
-        
+        self.bind("<Control-d>", lambda e: self.delete_record())
+
     def load_records(self):
         """Load records from JSON file."""
         with open("data/records.json") as file:
@@ -112,9 +114,9 @@ class RecordsWindow(tk.Toplevel):
         for record in records:
             if month == "All" or record["date"][0:7] == month:
                 self.tree.insert("", "end", iid=record["id"],
-                             values=(record["date"], record["type"],
-                                     record["amount"], record["category"],
-                                     record["nature"]))
+                                 values=(record["date"], record["type"],
+                                         record["amount"], record["category"],
+                                         record["nature"]))
 
     def open_edit_form(self, event):
         """Open the form to edit the record that was double-clicked."""
@@ -127,7 +129,7 @@ class RecordsWindow(tk.Toplevel):
         for record in self.load_records():
             if record["id"] == record_id:
                 RecordForm(self, record)
-                                                                  
+                                        
     def open_add_form(self):
         """Open the form for adding a new record."""
         RecordForm(self)
@@ -212,7 +214,8 @@ class RecordForm(tk.Toplevel):
                                       variable=self.type_var, value="income")
         income_radio.pack(side="left")
         expense_radio = tk.Radiobutton(type_frame,
-                                       text="Expense", variable=self.type_var, value="expense")
+                                       text="Expense", variable=self.type_var,
+                                       value="expense")
         expense_radio.pack(side="left")
 
         # Category: choose from a list
@@ -260,7 +263,7 @@ class RecordForm(tk.Toplevel):
         cancel_button = tk.Button(button_frame, text="Cancel",
                                   command=self.destroy)
         cancel_button.pack(side="left", padx=10)
-    
+
     def save_record(self):
         """Save the record when Save is clicked."""
         date = self.date_var.get()
@@ -291,7 +294,7 @@ class RecordForm(tk.Toplevel):
                                  "Please choose a category.")
             return
 
-        # Load all records, add the new one, then write them all back
+        # Load all records, add or change one, then write them all back
         records = self.parent.load_records()
         if self.record is None:
             # Give the new record the next id number
@@ -301,11 +304,11 @@ class RecordForm(tk.Toplevel):
                     new_id = record["id"] + 1
 
             new_record = {"id": new_id,
-                      "date": date,
-                      "type": self.type_var.get(),
-                      "amount": amount,
-                      "category": category,
-                      "nature": self.nature_var.get()}
+                          "date": date,
+                          "type": self.type_var.get(),
+                          "amount": amount,
+                          "category": category,
+                          "nature": self.nature_var.get()}
             records.append(new_record)
         else:
             # Editing: find the record with the same id and change it
@@ -320,10 +323,10 @@ class RecordForm(tk.Toplevel):
         with open("data/records.json", "w") as file:
             json.dump(records, file)
 
-        # Show the new record in the table and close the form
+        # Show change in the table and close the form
         self.parent.refresh_table()
         self.destroy()
-        
+
 
 if __name__ == "__main__":
     root = tk.Tk()
