@@ -18,6 +18,7 @@ class RecordsWindow(tk.Toplevel):
         self.geometry("750x450")
         self.title("Records")
         self.create_widgets()
+        self.create_menu()
         self.refresh_table()
 
     def create_widgets(self):
@@ -66,8 +67,26 @@ class RecordsWindow(tk.Toplevel):
         # Double-click a row to edit it
         self.tree.bind("<Double-1>", self.open_edit_form)
 
+    def create_menu(self):
+        """Create the menu bar and keyboard shortcuts."""
+        menubar = tk.Menu(self)
+        records_menu = tk.Menu(menubar, tearoff=False)
+        menubar.add_cascade(label="Records", menu=records_menu)
+
+        records_menu.add_command(label="Add", command=self.open_add_form,
+                                 accelerator="Ctrl+N")
+        records_menu.add_command(label="Delete", command=self.delete_record,
+                                 accelerator="Ctrl+D")
+        records_menu.add_separator()
+        records_menu.add_command(label="Close", command=self.destroy)
+        self.config(menu=menubar)
+
+        # Keyboard shortcuts
+        self.bind("<Control-n>", lambda e: self.open_add_form())
+        self.bind("<Control-d>", lambda e: self.delete_record()	)
+        
     def load_records(self):
-        """Load records from json file."""
+        """Load records from JSON file."""
         with open("data/records.json") as file:
             records = json.load(file)
         return records
