@@ -13,7 +13,7 @@ class BudgetWindow(tk.Toplevel) :
         
         #set title and size
         self.title("Monthly Budget")
-        self.geometry("450x350")
+        self.geometry("500x350")
         
         #store the text entered in two input fields
         self.month_var = tk.StringVar()
