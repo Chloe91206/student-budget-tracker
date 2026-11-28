@@ -36,4 +36,18 @@ class CategoryWindow(tk.Toplevel):
         self.tree.heading("category", text="Category")
         self.tree.column("category", width=350)
         self.tree.grid(row=1, column=0, columnspan=3, padx=15, pady=5)   
-        
+
+        # enter a category name
+        name_label = tk.Label(self, text="Category name")
+        name_label.grid(row=2, column=0, padx=15, pady=10)
+
+        name_entry = tk.Entry(self, textvariable=self.name_var)
+        name_entry.grid(row=2, column=1, columnspan=2, padx=15, pady=10)
+
+        # add a new category
+        add_button = tk.Button(self, text="Add", command=self.add_category)
+        add_button.grid(row=3, column=0, padx=10, pady=10)
+
+        # delete the selected category
+        delete_button = tk.Button(self, text="Delete", command=self.delete_category)
+        delete_button.grid(row=3, column=2, padx=10, pady=10)
