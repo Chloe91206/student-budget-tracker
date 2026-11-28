@@ -76,8 +76,7 @@ class BudgetWindow(tk.Toplevel) :
 
         # require four digits, a dash, and two digits
         if not re.match(r"^[0-9]{4}-[0-9]{2}$", month):
-            messagebox.showerror(
-                "Invalid month",
+            messagebox.showerror("Invalid month",
                 "Please enter a month as YYYY-MM."
             )
             return False
@@ -86,10 +85,7 @@ class BudgetWindow(tk.Toplevel) :
        
         # only allow months from 1 to 12
         if month_number < 1 or month_number > 12:
-            messagebox.showerror(
-                "Invalid month",
-                "The month must be between 01 and 12."
-            )
+            messagebox.showerror("Invalid month","The month must be between 01 and 12.")
             return False
 
         return True   
@@ -138,14 +134,26 @@ class BudgetWindow(tk.Toplevel) :
 
         # ask user to enter a budget if input is empty
         if budget_text == "":
-            messagebox.showerror(
-                "Missing budget",
-                "Please enter a budget."
-            )
+            messagebox.showerror("Missing budget","Please enter a budget.")
             return
 
         # convert text to a number
         try:
             budget = float(budget_text)
 
+        # show an error if text cannot be converted
+        except ValueError:
+                messagebox.showerror("Invalid budget","Please enter a number.")
+                return
         
+        # read saved budgets before changing one month
+        month = self.month_var.get()
+        budgets = self.load_budgets()
+        budgets[month] = budget
+        
+        # write updated budgets back to json file
+        with open("data/budget.json", "w") as file:
+            json.dump(budgets, file)
+        
+        self.update_totals()
+                
