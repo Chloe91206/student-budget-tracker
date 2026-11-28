@@ -118,3 +118,17 @@ class CategoryWindow(tk.Toplevel):
                 return True
 
         return False    
+
+    # rename the selected category
+    def rename_category(self):
+        selected = self.tree.selection()
+
+        # require a selected category
+        if len(selected) == 0:
+            messagebox.showerror("No category selected", "Please select a category.")
+            return
+
+        old_name = selected[0]
+        new_name = self.name_var.get()
+
+        
