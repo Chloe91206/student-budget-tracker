@@ -155,3 +155,16 @@ class CategoryWindow(tk.Toplevel):
         self.save_categories(new_categories)
         self.refresh_categories()
         self.name_var.set("")
+
+    # delete selected category
+    def delete_category(self):
+        selected = self.tree.selection()
+
+        # require a selected category
+        if len(selected) == 0:
+            messagebox.showerror("No category selected", "Please select a category.")
+            return
+
+        name = selected[0]
+
+       
