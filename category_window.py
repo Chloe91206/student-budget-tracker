@@ -48,6 +48,10 @@ class CategoryWindow(tk.Toplevel):
         add_button = tk.Button(self, text="Add", command=self.add_category)
         add_button.grid(row=3, column=0, padx=10, pady=10)
 
+        # rename the selected category
+        rename_button = tk.Button(self, text="Rename", command=self.rename_category)
+        rename_button.grid(row=3, column=1, padx=10, pady=10)
+
         # delete the selected category
         delete_button = tk.Button(self, text="Delete", command=self.delete_category)
         delete_button.grid(row=3, column=2, padx=10, pady=10)
