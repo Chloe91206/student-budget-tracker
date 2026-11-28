@@ -131,4 +131,27 @@ class CategoryWindow(tk.Toplevel):
         old_name = selected[0]
         new_name = self.name_var.get()
 
-        
+        # require a new name
+        if new_name == "":
+            messagebox.showerror("Missing name", "Please enter a new category name.")
+            return
+
+        categories = self.load_categories()
+
+        # keep names which already used by records
+        if self.category_in_use(old_name):
+            messagebox.showwarning("Category in use", "This category is used by saved records and cannot be renamed.")
+            return
+
+        # replace the selected name
+        new_categories = []
+
+        for category in categories:
+            if category == old_name:
+                new_categories.append(new_name)
+            else:
+                new_categories.append(category)
+
+        self.save_categories(new_categories)
+        self.refresh_categories()
+        self.name_var.set("")
