@@ -108,3 +108,13 @@ class CategoryWindow(tk.Toplevel):
         self.save_categories(categories)
         self.refresh_categories()
         self.name_var.set("")
+
+    # check whether a record uses this category
+    def category_in_use(self, category):
+        records = self.load_records()
+
+        for record in records:
+            if record["category"] == category:
+                return True
+
+        return False    
