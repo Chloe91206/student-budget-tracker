@@ -76,9 +76,7 @@ class BudgetWindow(tk.Toplevel) :
 
         # require four digits, a dash, and two digits
         if not re.match(r"^[0-9]{4}-[0-9]{2}$", month):
-            messagebox.showerror("Invalid month",
-                "Please enter a month as YYYY-MM."
-            )
+            messagebox.showerror("Invalid month","Please enter a month as YYYY-MM.")
             return False
         
         month_number = int(month[5:7])
@@ -103,9 +101,10 @@ class BudgetWindow(tk.Toplevel) :
             records = json.load(file)
 
         return records 
-        # display the saved budget for the selected month
-    
+        
+    # display the saved budget for the selected month
     def show_budget(self):
+        
         # stop if the month input is invalid
         if not self.check_month():
             return
