@@ -177,7 +177,7 @@ class BudgetWindow(tk.Toplevel) :
         for record in records:
 
             # only use records from selected month
-            if record["date"][0:7] == month:
+            if record["date"][:7] == month:
 
                 # add income amounts to income total
                 if record["type"] == "income":
@@ -188,10 +188,14 @@ class BudgetWindow(tk.Toplevel) :
                     total_expenses = total_expenses + record["amount"]
        
         # show income total
-        self.income_label.config(text="Total income: CAD " + str(total_income))
+        self.income_label.config(
+            text="Total income: CAD {}".format(total_income)
+        )
 
         # show expense total
-        self.expense_label.config(text="Total expenses: CAD " + str(total_expenses))
+        self.expense_label.config(
+            text="Total expenses: CAD {}".format(total_expenses)
+        )
 
         # calculates remaining budgets and set over budget warning
         # read saved budgets to find this month's budget
