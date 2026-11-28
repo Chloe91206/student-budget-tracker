@@ -212,3 +212,8 @@ class BudgetWindow(tk.Toplevel) :
         if remaining < 0:
             self.remaining_label.config(fg="red")
             messagebox.showwarning("Over budget","Your spending is over the monthly budget.")
+
+# test the budget window
+root = tk.Tk()
+app = BudgetWindow(root)
+root.mainloop() 
