@@ -160,4 +160,55 @@ class BudgetWindow(tk.Toplevel) :
             json.dump(budgets, file)
         
         self.update_totals()
-                
+    
+
+    # calculate totals for selected month
+    def update_totals(self):
+
+        # get selected month and all saved records
+        month = self.month_var.get()
+        records = self.load_records()
+
+        # start both totals at zero
+        total_income = 0
+        total_expenses = 0
+
+        # check each saved record
+        for record in records:
+
+            # only use records from selected month
+            if record["date"][0:7] == month:
+
+                # add income amounts to income total
+                if record["type"] == "income":
+                    total_income = total_income + record["amount"]
+
+                # add expense amounts to expense total
+                elif record["type"] == "expense":
+                    total_expenses = total_expenses + record["amount"]
+       
+        # show income total
+        self.income_label.config(text="Total income: CAD " + str(total_income))
+
+        # show expense total
+        self.expense_label.config(text="Total expenses: CAD " + str(total_expenses))
+
+        # calculates remaining budgets and set over budget warning
+        # read saved budgets to find this month's budget
+        budgets = self.load_budgets()
+
+        # show a message if this month has no saved budget
+        if month not in budgets:
+            self.remaining_label.config(text="Remaining budget: not set",fg="black")
+            return
+        
+        # subtract expenses from monthly budget
+        remaining = budgets[month] - total_expenses
+
+        # show remaining budget in black
+        self.remaining_label.config(text="Remaining budget: CAD " + str(remaining),fg="black")
+
+        # turn the amount red and show a warning if over budget
+        if remaining < 0:
+            self.remaining_label.config(fg="red")
+            messagebox.showwarning("Over budget","Your spending is over the monthly budget.")
