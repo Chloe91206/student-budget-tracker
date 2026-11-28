@@ -74,3 +74,37 @@ class CategoryWindow(tk.Toplevel):
             records = json.load(file)
 
         return records
+    
+    # refresh category list
+    def refresh_categories(self):
+
+        # remove the old rows
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        # show each saved category
+        categories = self.load_categories()
+        for category in categories:
+            self.tree.insert("", "end", iid=category, values=(category,))
+
+    # add a new category
+    def add_category(self):
+        name = self.name_var.get()
+
+        #ask for a category name
+        if name == "":
+            messagebox.showerror("Missing name", "Please enter a category name.")
+            return
+
+        categories = self.load_categories()
+
+        # reject an existing name
+        if name in categories:
+            messagebox.showerror("Duplicate category", "This category already exists.")
+            return
+
+        # save and display the new category
+        categories.append(name)
+        self.save_categories(categories)
+        self.refresh_categories()
+        self.name_var.set("")
