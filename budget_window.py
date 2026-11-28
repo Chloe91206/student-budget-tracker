@@ -145,7 +145,12 @@ class BudgetWindow(tk.Toplevel) :
         except ValueError:
                 messagebox.showerror("Invalid budget","Please enter a number.")
                 return
-        
+       
+        # do not allow a negative budget
+        if budget < 0:
+            messagebox.showerror("Invalid budget","The budget cannot be negative.")
+            return
+                
         # read saved budgets before changing one month
         month = self.month_var.get()
         budgets = self.load_budgets()
