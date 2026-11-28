@@ -167,4 +167,25 @@ class CategoryWindow(tk.Toplevel):
 
         name = selected[0]
 
-       
+        # keep categories which used by records
+        if self.category_in_use(name):
+            messagebox.showwarning("Category in use", "This category is used by saved records and cannot be deleted.")
+            return
+
+        # ask before deleting
+        answer = messagebox.askyesno("Delete category", "Do you want to delete this category?")
+
+        if not answer:
+            return
+
+        # keep the other categories
+        categories = self.load_categories()
+        new_categories = []
+
+        for category in categories:
+            if category != name:
+                new_categories.append(category)
+
+        self.save_categories(new_categories)
+        self.refresh_categories()
+        self.name_var.set("")
