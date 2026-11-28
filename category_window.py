@@ -137,7 +137,12 @@ class CategoryWindow(tk.Toplevel):
             return
 
         categories = self.load_categories()
-
+       
+        # reject an existing name
+        if new_name in categories:
+            messagebox.showerror("Duplicate category", "This category already exists.")
+            return
+       
         # keep names which already used by records
         if self.category_in_use(old_name):
             messagebox.showwarning("Category in use", "This category is used by saved records and cannot be renamed.")
