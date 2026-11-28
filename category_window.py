@@ -189,3 +189,8 @@ class CategoryWindow(tk.Toplevel):
         self.save_categories(new_categories)
         self.refresh_categories()
         self.name_var.set("")
+
+# test the category window
+root = tk.Tk()
+app = CategoryWindow(root)
+root.mainloop()
