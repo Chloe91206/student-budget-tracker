@@ -51,3 +51,22 @@ class CategoryWindow(tk.Toplevel):
         # delete the selected category
         delete_button = tk.Button(self, text="Delete", command=self.delete_category)
         delete_button.grid(row=3, column=2, padx=10, pady=10)
+
+    # read saved categories
+    def load_categories(self):
+        with open("data/categories.json") as file:
+            categories = json.load(file)
+
+        return categories
+
+    # save category list
+    def save_categories(self, categories):
+        with open("data/categories.json", "w") as file:
+            json.dump(categories, file)
+
+    # read saved records
+    def load_records(self):
+        with open("data/records.json") as file:
+            records = json.load(file)
+
+        return records
