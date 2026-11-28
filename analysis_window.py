@@ -1,4 +1,5 @@
 import tkinter as tk
+import json
 from tkinter import ttk
 
 class AnalysisWindow(tk.Toplevel):
@@ -11,6 +12,7 @@ class AnalysisWindow(tk.Toplevel):
         self.geometry("800x600")
         self.minsize(650, 450)
 
+        self.records = self.load_records()
         self.create_widgets()
 
     def create_widgets(self):
@@ -34,6 +36,7 @@ class AnalysisWindow(tk.Toplevel):
         month_label = ttk.Label(
             month_frame,
             text="Select Month:")
+        month_label.pack(side="left", padx=10)
 
         self.month_var = tk.StringVar(value="2026-11")
 
@@ -45,6 +48,66 @@ class AnalysisWindow(tk.Toplevel):
             width=15)
         self.month_combo.pack(side="left")
 
+        # Financial summary
+        self.summary_label = ttk.Label(
+            self,
+            text="",
+            font=("Arial", 12))
+        self.summary_label.pack(pady=20)
+
+        # Update when the selected month changes
+        update_button = ttk.Button(
+            month_frame,
+            text="Update",
+            command=self.update_summary)
+        update_button.pack(side="left", padx=10)
+
+        # Display initial summary
+        self.update_summary()
+
+    def update_summary(self):
+        """Update the monthly financial summary."""
+
+        income, expenses, balance = self.calculate_summary()
+
+        summary_text = (
+            f"Total Income: ${income:.2f}\n"
+            f"Total Expenses: ${expenses:.2f}\n"
+            f"Balance: ${balance:.2f}"
+        )
+        self.summary_label.config(text=summary_text)
+
+    def load_records(self):
+        """Load transaction records from JSON."""
+
+        try:
+            with open("data/sample.json", "r") as file:
+                records = json.load(file)
+                return records
+
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+
+    def calculate_summary(self):
+        """Calculate income, expenses, and balance."""
+
+        selected_month = self.month_var.get()
+
+        total_income = 0
+        total_expenses = 0
+
+        for record in self.records:
+
+            if record["date"][:7] == selected_month:
+                if record["type"] == "income":
+                    total_income += record["amount"]
+                elif record["type"] == "expense":
+                    total_expenses += record["amount"]
+
+        balance = total_income - total_expenses
+
+        return total_income, total_expenses, balance
+    
 # Run this file independently for testing
 if __name__ == "__main__":
     root = tk.Tk()
